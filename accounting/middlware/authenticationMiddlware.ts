@@ -1,7 +1,4 @@
-import { Request, Response, NextFunction } from "express";
-import {IUser, User} from "../model/User";
-import {decodeBase64, encodeBase64} from "../utils/utilsForPassword";
-import UserDto from "../dto/UserDto";
+import {NextFunction, Request, Response} from "express";
 import jwt, {JwtPayload} from "jsonwebtoken";
 
 export type extendedReq = Request & { user: JwtPayload };
@@ -12,6 +9,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
 
     try {
         (req as Request & { user: JwtPayload }).user = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+        console.log("token" + (req as any).user)
         next();
     } catch {
         next(new Error("Not authenticated"));
